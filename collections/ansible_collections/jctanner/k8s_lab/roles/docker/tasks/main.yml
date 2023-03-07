@@ -1,0 +1,128 @@
+---
+# tasks file for docker
+
+- name: check if docker-ce installed
+  shell: dpkg -l docker-ce
+  ignore_errors: True
+  changed_when: False
+  register: docker_ce_check
+
+- name: stop docker
+  systemd:
+    name: docker
+    state: stopped
+  become: True
+  ignore_errors: True
+  when: 'docker_ce_check.rc == 1'
+
+- name: stop containerd
+  systemd:
+    name: containerd
+    state: stopped
+  become: True
+  ignore_errors: True
+  when: 'docker_ce_check.rc == 1'
+
+- name: get rid of containerd
+  apt:
+    name: containerd
+    state: absent
+  become: True
+  ignore_errors: True
+  when: 'docker_ce_check.rc == 1'
+
+- name: get rid of docker.io
+  apt:
+    name: containerd
+    state: absent
+  become: True
+  ignore_errors: True
+  when: 'docker_ce_check.rc == 1'
+
+- name: nuke containerd&docker from orbit
+  shell: systemctl stop containerd ; apt purge -y containerd ; apt purge -y docker.io
+  become: True
+  when: 'docker_ce_check.rc == 1'
+
+
+#-------------------------------------------------------------------
+
+- name: get the gpg key
+  shell: curl -o /root/docker.gpg https://download.docker.com/linux/ubuntu/gpg
+  args:
+    creates: /root/docker.gpg
+  become: True
+
+- name: decrypt the gpg key
+  shell: cat /root/docker.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/docker.gpg
+  args:
+    creates: /etc/apt/trusted.gpg.d/docker.gpg
+  become: True
+
+- name: add the repository
+  copy:
+    content: "deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable"
+    dest: /etc/apt/sources.list.d/docker.list
+  become: True
+  register: docker_repo
+
+- name: update apt
+  shell: apt update
+  when: 'docker_repo.changed'
+  become: True
+
+#-------------------------------------------------------------------
+
+- name: install docker
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    # - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin
+  become: True
+
+- name: enable/start docker
+  systemd:
+    name: docker
+    enabled: True
+    state: started
+  become: True
+
+- name: set the daemon config
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+  register: daemon_conf
+  become: True
+
+- name: restart docker if daemon config changed
+  systemd:
+    name: docker
+    state: restarted
+  when: 'daemon_conf.changed'
+  become: True
+
+- name: make /etc/containerd
+  file:
+    path: /etc/containerd
+    state: directory
+  become: True
+
+- name: configure containerd
+  shell: containerd config default > /etc/containerd/config.toml
+  args:
+    creates: /etc/containerd/config.toml
+  become: True
+  register: containerd_config
+
+
+- name: restart containerd if config changed
+  systemd:
+    name: containerd
+    state: restarted
+  become: True
+  when: 'containerd_config.changed'

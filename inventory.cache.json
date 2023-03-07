@@ -1,0 +1,68 @@
+{
+  "controlplane1": {
+    "HostName": "192.168.122.124",
+    "IdentitiesOnly": "yes",
+    "IdentityFile": "/home/jtanner/workspace/github/jctanner.redhat/k8s.testing/.vagrant/machines/controlplane1/libvirt/private_key",
+    "LogLevel": "FATAL",
+    "PasswordAuthentication": "no",
+    "Port": "22",
+    "StrictHostKeyChecking": "no",
+    "User": "vagrant",
+    "UserKnownHostsFile": "/dev/null"
+  },
+  "controlplane2": {
+    "HostName": "192.168.122.104",
+    "IdentitiesOnly": "yes",
+    "IdentityFile": "/home/jtanner/workspace/github/jctanner.redhat/k8s.testing/.vagrant/machines/controlplane2/libvirt/private_key",
+    "LogLevel": "FATAL",
+    "PasswordAuthentication": "no",
+    "Port": "22",
+    "StrictHostKeyChecking": "no",
+    "User": "vagrant",
+    "UserKnownHostsFile": "/dev/null"
+  },
+  "controlplane3": {
+    "HostName": "192.168.122.54",
+    "IdentitiesOnly": "yes",
+    "IdentityFile": "/home/jtanner/workspace/github/jctanner.redhat/k8s.testing/.vagrant/machines/controlplane3/libvirt/private_key",
+    "LogLevel": "FATAL",
+    "PasswordAuthentication": "no",
+    "Port": "22",
+    "StrictHostKeyChecking": "no",
+    "User": "vagrant",
+    "UserKnownHostsFile": "/dev/null"
+  },
+  "worker1": {
+    "HostName": "192.168.122.106",
+    "IdentitiesOnly": "yes",
+    "IdentityFile": "/home/jtanner/workspace/github/jctanner.redhat/k8s.testing/.vagrant/machines/worker1/libvirt/private_key",
+    "LogLevel": "FATAL",
+    "PasswordAuthentication": "no",
+    "Port": "22",
+    "StrictHostKeyChecking": "no",
+    "User": "vagrant",
+    "UserKnownHostsFile": "/dev/null"
+  },
+  "worker2": {
+    "HostName": "192.168.122.251",
+    "IdentitiesOnly": "yes",
+    "IdentityFile": "/home/jtanner/workspace/github/jctanner.redhat/k8s.testing/.vagrant/machines/worker2/libvirt/private_key",
+    "LogLevel": "FATAL",
+    "PasswordAuthentication": "no",
+    "Port": "22",
+    "StrictHostKeyChecking": "no",
+    "User": "vagrant",
+    "UserKnownHostsFile": "/dev/null"
+  },
+  "worker3": {
+    "HostName": "192.168.122.176",
+    "IdentitiesOnly": "yes",
+    "IdentityFile": "/home/jtanner/workspace/github/jctanner.redhat/k8s.testing/.vagrant/machines/worker3/libvirt/private_key",
+    "LogLevel": "FATAL",
+    "PasswordAuthentication": "no",
+    "Port": "22",
+    "StrictHostKeyChecking": "no",
+    "User": "vagrant",
+    "UserKnownHostsFile": "/dev/null"
+  }
+}

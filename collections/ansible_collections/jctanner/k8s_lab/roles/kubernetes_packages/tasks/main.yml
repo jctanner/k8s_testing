@@ -1,0 +1,66 @@
+---
+# tasks file for kubernetes_packages
+
+#- name: install the google key
+#  apt_key:
+#    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+#    state: present
+
+#- name: get the gpg key
+#  shell: curl -fsSLo /root/google-apt-key.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+#  args:
+#    creates: /root/google-apt-key.gpg
+#  become: True
+
+- name: get the gpg key
+  copy:
+    src: google-apt-key.gpg
+    dest: /root/google-apt-key.gpg
+  become: True
+
+#- name: decrypt the gpg key
+#  shell: cat /root/google-apt-key.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/k8s.gpg
+#  args:
+#    creates: /etc/apt/trusted.gpg.d/k8s.gpg
+#  become: True
+#  register: k8s_key
+
+- name: decrypt the gpg key
+  copy:
+    src: k8s.gpg
+    dest: /etc/apt/trusted.gpg.d/k8s.gpg
+  become: True
+  register: k8s_key
+
+#- name: install the apt key
+#  shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+#  become: True
+
+- name: add the repository
+  copy:
+    content: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    dest: /etc/apt/sources.list.d/kubernetes.list
+  become: True
+  register: k8s_repo
+
+- name: update apt
+  shell: apt update
+  when: 'k8s_key.changed or k8s_repo.changed'
+  become: True
+
+- name: define k8s packages
+  set_fact:
+      k8s_packages:
+        - wget
+        - curl
+        - vim
+        - git
+        - kubelet
+        - kubeadm
+        - kubectl
+
+- name: install the required k8s packages
+  apt:
+      name: "{{ k8s_packages }}"
+      state: present
+  become: True

@@ -1,0 +1,14 @@
+---
+# tasks file for common_packages
+
+- set_fact:
+    common_packages:
+      - tree
+      - lsb-release
+
+- name: install common packages
+  apt:
+    name: "{{ common_packages }}"
+    state: present
+  become: True
+  when: common_packages | length > 0

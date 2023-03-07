@@ -1,0 +1,13 @@
+---
+# tasks file for hostnames
+
+
+- debug: var=hostvars
+
+- name: munge the hosts files
+  jctanner.k8s_lab.hostsfile:
+    hostvars: "{{ hostvars }}"
+    domain: "okdlab.net"
+  become: True
+
+# - fail: msg="fixing hosts"

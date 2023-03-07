@@ -1,0 +1,10 @@
+---
+# tasks file for update_packages
+
+- jctanner.k8s_lab.package_updater:
+  become: True
+
+- name: check if reboot required
+  shell: test -f /var/run/reboot-required
+  failed_when: False
+  changed_when: False

@@ -1,0 +1,35 @@
+---
+# tasks file for kubernetes_system_settings
+
+- name: insert kernel modules
+  jctanner.k8s_lab.modprobe:
+      name: "{{ item }}"
+      state: present
+  loop:
+    - overlay
+    - br_netfilter
+  become: True
+
+- name: change sysctl settings
+  jctanner.k8s_lab.sysctl:
+      name: "{{ item[0] }}"
+      value: "{{ item[1] }}"
+  loop:
+    - ['net.bridge.bridge-nf-call-ip6tables', 1]
+    - ['net.bridge.bridge-nf-call-iptables', 1]
+    - ['net.ipv4.ip_forward', 1]
+  become: True
+
+- name: turn off swap
+  shell: swapoff -a
+  become: True
+
+- name: remove swap from fstab
+  shell: sed -i.bak 's|/swap.img.*||' /etc/fstab
+  become: True
+
+- name: remove the swap file
+  file:
+    path: /swap.img
+    state: absent
+  become: True

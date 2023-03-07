@@ -1,0 +1,85 @@
+---
+# tasks file for crio
+
+# https://github.com/cri-o/cri-o/blob/main/install.md#apt-based-operating-systems
+
+#sudo -i
+#OS="xUbuntu_22.04"
+#VERSION=1.26
+#echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+#echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list
+#curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/Release.key | apt-key add -
+#curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | apt-key add -#
+
+# https://github.com/cri-o/cri-o/blob/main/install.md#apt-based-operating-systems
+
+- set_fact:
+    crio_os: "xUbuntu_22.04"
+    #crio_version: "1.26"
+    crio_version: "1.24"
+    crio_stable_repo_file: "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+    crio_versioned_repo_file: "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:1.26.list"
+
+- name: get the libcontainers stable repo
+  copy:
+    dest: "{{ crio_stable_repo_file }}" 
+    content: "{{ 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/' + crio_os + '/ /' }}"
+  become: True
+
+- name: get the libcontainers versioned repo
+  copy:
+    dest: "{{ crio_versioned_repo_file }}" 
+    content: "{{ 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/' + crio_version + '/' + crio_os + '/ /' }}"
+  become: True
+
+- name: make the keyrings dir
+  file:
+    path: /usr/share/keyrings
+    state: directory
+  become: True
+
+- name: get the stable armored keyring file
+  shell: curl -o /root/archive.release.key "{{ 'https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/' + crio_os + '/Release.key' }}"
+  args:
+    creates: /root/archive.release.key
+  become: True
+
+#- name: get the versioned armored keyring file
+#  shell: curl -o /root/version.release.key "{{ 'https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/cri-o:/' + crio_version + '/' + crio_os + '/Release.key' }}"
+#  args:
+#    creates: /root/version.release.key
+#  become: True
+
+- name: install the stable armored keyring
+  shell: cat /root/archive.release.key | gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/libcontainers-archive-keyring.gpg
+  become: True
+
+- name: add the stable key
+  apt_key:
+    file: /usr/share/keyrings/libcontainers-archive-keyring.gpg
+  become: True
+
+#- name: install the versioned armored keyring
+#  shell: cat /root/version.release.key | gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+#  args:
+#    creates: /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+#  become: True
+
+- name: install crio packages
+  apt:
+    update_cache: true
+    name: ['cri-o', 'cri-o-runc']
+    state: present
+  become: True
+
+- name: start crio
+  systemd:
+    name: crio
+    enabled: True
+    state: started
+  become: True
+
+#- name: exit early
+#  fail: msg="not done yet"

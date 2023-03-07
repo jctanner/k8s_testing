@@ -1,0 +1,44 @@
+- hosts: all
+  gather_facts: False
+
+  tasks:
+
+    - name: update machines
+      include_role:
+        name: jctanner.k8s_lab.update_packages
+
+    - name: install common packages
+      include_role:
+        name: jctanner.k8s_lab.common_packages
+
+    - name: manage hostnames
+      include_role:
+        name: jctanner.k8s_lab.hostnames
+
+- hosts: controlplane_hosts:worker_hosts
+  gather_facts: False
+
+  tasks:
+
+    #- name: install docker
+    #  include_role:
+    #    name: jctanner.k8s_lab.docker
+
+    - name: install cri-o
+      include_role:
+        name: jctanner.k8s_lab.crio
+
+    - name: install kubernetes packages
+      include_role:
+        name: jctanner.k8s_lab.kubernetes_packages
+
+    - name: install kubernetes packages
+      include_role:
+        name: jctanner.k8s_lab.kubernetes_system_settings
+
+- hosts: controlplane1
+  gather_facts: False
+  tasks:
+    - name: init the control plane
+      include_role:
+        name: jctanner.k8s_lab.kubernetes_control_plane_init

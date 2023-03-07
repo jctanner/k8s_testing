@@ -1,0 +1,20 @@
+https://www.letscloud.io/community/how-to-install-kubernetesk8s-and-docker-on-ubuntu-2004
+https://computingforgeeks.com/install-kubernetes-cluster-ubuntu-jammy/
+
+http://www.debianadmin.com/upgrade-multiple-debian-systems-with-approx.html
+https://help.ubuntu.com/community/Apt-Cacher%20NG#:~:text=Apt%2DCache%2Dng%20is%20A,Lower%20latency
+https://askubuntu.com/a/44058
+https://acidborg.wordpress.com/2010/06/24/how-to-install-and-configure-apt-cacher-ng-on-ubuntu-server-10-04/
+https://www.unix-ag.uni-kl.de/~bloch/acng/
+
+
+https://askubuntu.com/questions/3503/best-way-to-cache-apt-downloads-on-a-lan
+    https://bazaar.launchpad.net/~squid-deb-proxy-developers/squid-deb-proxy/trunk/view/head:/squid-deb-proxy.conf
+
+    On server:
+            apt-get install squid-deb-proxy avahi-utils
+            start squid-deb-proxy
+            start squid-deb-proxy-avahi
+
+    On client(s):
+            apt install squid-deb-proxy-client
