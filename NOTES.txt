@@ -18,3 +18,49 @@ https://askubuntu.com/questions/3503/best-way-to-cache-apt-downloads-on-a-lan
 
     On client(s):
             apt install squid-deb-proxy-client
+
+
+
+# workers
+kubeadm join 192.168.122.124:6443 --token 1rcpsb.5knjc1gq5wdc05z9 \
+    --discovery-token-ca-cert-hash sha256:98dfb7e7a7f24aef0331a4d6b45f4b25a174a39f23e3deb2dbd8b348c9c29511
+
+# controlplanes
+kubeadm join 192.168.122.124:6443 --token 1rcpsb.5knjc1gq5wdc05z9 \
+    --discovery-token-ca-cert-hash sha256:98dfb7e7a7f24aef0331a4d6b45f4b25a174a39f23e3deb2dbd8b348c9c29511 \
+	--control-plane
+
+
+root@controlplane1:~# export KUBECONFIG=/etc/kubernetes/admin.conf
+root@controlplane1:~# kubectl get nodes
+NAME            STATUS   ROLES           AGE     VERSION
+controlplane1   Ready    control-plane   40m     v1.26.2
+worker1         Ready    <none>          34m     v1.26.2
+worker2         Ready    <none>          15m     v1.26.2
+worker3         Ready    <none>          8m21s   v1.26.2
+
+root@controlplane1:~# kubectl cluster-info
+Kubernetes control plane is running at https://192.168.122.124:6443
+CoreDNS is running at https://192.168.122.124:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
+
+root@controlplane2:~# kubeadm join 192.168.122.124:6443 --token 1rcpsb.5knjc1gq5wdc05z9 \
+    --discovery-token-ca-cert-hash sha256:98dfb7e7a7f24aef0331a4d6b45f4b25a174a39f23e3deb2dbd8b348c9c29511 \
+    --control-plane
+[preflight] Running pre-flight checks
+[preflight] Reading configuration from the cluster...
+[preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
+error execution phase preflight: 
+One or more conditions for hosting a new control plane instance is not satisfied.
+unable to add a new control plane instance to a cluster that doesn't have a stable controlPlaneEndpoint address
+Please ensure that:
+* The cluster has a stable controlPlaneEndpoint address.
+* The certificates that must be shared among control plane instances are provided.
+To see the stack trace of this error execute with --v=5 or higher
+
+-------------------------------------------------------------------------
+
+
+https://www.linuxtechi.com/setup-private-docker-registry-kubernetes/
+

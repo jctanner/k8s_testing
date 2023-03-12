@@ -15,6 +15,10 @@
       include_role:
         name: jctanner.k8s_lab.hostnames
 
+    - name: manage ntp
+      include_role:
+        name: jctanner.k8s_lab.ntp
+
 - hosts: controlplane_hosts:worker_hosts
   gather_facts: False
 

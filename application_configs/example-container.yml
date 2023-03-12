@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: uname
+  labels:
+    purpose: demonstrate-uname
+spec:
+  containers:
+  - name: command-uname-container
+    image: debian
+    command: ["uname", "-a"]
+  restartPolicy: OnFailure

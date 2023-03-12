@@ -1,7 +1,6 @@
 ---
 # tasks file for hostnames
 
-
 - debug: var=hostvars
 
 - name: munge the hosts files

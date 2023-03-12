@@ -1,0 +1,6 @@
+---
+# tasks file for ntp
+- name: make sure ntp is running
+  systemd:
+    name: systemd-timesyncd
+    state: started

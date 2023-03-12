@@ -5,6 +5,7 @@
     common_packages:
       - tree
       - lsb-release
+      - net-tools
 
 - name: install common packages
   apt:
