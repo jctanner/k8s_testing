@@ -1,0 +1,9 @@
+[Unit]
+Description=Custom DNS Server
+After=network.target
+
+[Service]
+ExecStart=/opt/godns/godns.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -1,3 +1,21 @@
+# Instructions
+
+vagrant box update
+vagrant up
+python inventory.py
+virtualenv venv
+source venv/bin/activate
+pip install ansible-core vim-power
+ansible -v -i inventory.py provision_hosts.yml
+
+ansible -v -i inventory.py create_cluster.yml
+
+
+----------------------------------------------------------------------------------------------
+
+
+# References
+
 https://www.letscloud.io/community/how-to-install-kubernetesk8s-and-docker-on-ubuntu-2004
 https://computingforgeeks.com/install-kubernetes-cluster-ubuntu-jammy/
 

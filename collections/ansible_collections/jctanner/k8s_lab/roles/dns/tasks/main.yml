@@ -1,0 +1,44 @@
+- name: turn off systemd-resolved
+  systemd:
+    name: systemd-resolved
+    enabled: False
+    state: stopped
+
+- name: install golang
+  apt:
+      name: golang
+      state: present
+
+- name: create the dns service code directory
+  file:
+    path: /opt/godns
+    state: directory
+
+- name: copy the dns service code directory
+  copy:
+    src: "{{ item }}"
+    dest: /opt/godns/.
+  loop:
+    - godns.go
+    - godns.sh
+
+- name: make sure the dns service script is executable
+  file:
+    path: /opt/godns/godns.sh
+    mode: "0755"
+
+- name: copy the unit file
+  copy:
+    src: godns.service
+    dest: /etc/systemd/system/.
+  register: dns_unit_copy_task
+
+- name: reload systemd if necessary
+  shell: systemctl daemon-reload
+  when: "dns_unit_copy_task.changed"
+
+- name: enable & start godns
+  systemd:
+    name: godns
+    enabled: True
+    state: started

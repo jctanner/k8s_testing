@@ -19,6 +19,16 @@
       include_role:
         name: jctanner.k8s_lab.ntp
 
+
+- name: create dns server
+  hosts: dns_hosts
+  become: True
+  tasks:
+      - name: setup dns service
+        include_role:
+          name: jctanner.k8s_lab.dns
+
+
 - hosts: controlplane_hosts:worker_hosts
   gather_facts: False
 
@@ -39,10 +49,3 @@
     - name: install kubernetes packages
       include_role:
         name: jctanner.k8s_lab.kubernetes_system_settings
-
-- hosts: controlplane1
-  gather_facts: False
-  tasks:
-    - name: init the control plane
-      include_role:
-        name: jctanner.k8s_lab.kubernetes_control_plane_init

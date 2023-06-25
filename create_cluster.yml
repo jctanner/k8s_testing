@@ -1,0 +1,28 @@
+- hosts: controlplane1
+  gather_facts: False
+  become: True
+
+  tasks:
+
+    - name: init cluster
+      shell: kubeadm init
+      args:
+        creates: /etc/kubernetes/manifests/kube-scheduler.yaml
+      register: init_output
+
+    - name: get join command
+      shell: kubeadm token create --print-join-command
+      register: join_command
+
+
+
+- hosts: worker_hosts
+  gather_facts: False
+  become: True
+
+  tasks:
+      - name: show join command
+        debug:
+          var: hostvars['controlplane1']['join_command'].stdout
+      - name: run join command
+        shell: "{{ hostvars['controlplane1']['join_command'].stdout }}"
