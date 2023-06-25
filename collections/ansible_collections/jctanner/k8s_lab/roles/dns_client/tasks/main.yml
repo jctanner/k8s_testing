@@ -1,0 +1,13 @@
+- name: define CLUSTER_DNS_IP
+  set_fact:
+    CLUSTER_DNS_IP: "{{ hostvars['dns1']['ansible_all_ipv4_addresses'][0] }}"
+
+- name: render the netcfg file
+  template:
+    src: netcfg.yml.j2
+    dest: /etc/netplan/01-netcfg.yaml
+  register: netplan_file_task
+
+- name: apply netplan
+  shell: netplan apply
+  when: "netplan_file_task.changed"

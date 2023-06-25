@@ -1,0 +1,10 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: true
+      dhcp6: false
+      optional: true
+      nameservers:
+        addresses: [{{ CLUSTER_DNS_IP }}, 4.2.2.1, 4.2.2.2, 208.67.220.220]
