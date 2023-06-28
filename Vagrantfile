@@ -13,25 +13,20 @@ Vagrant.configure("2") do |config|
     dns1.vm.hostname = "dns1.okdlab.net"
   end
 
-  config.vm.define "haproxy" do |haproxy|
-    haproxy.vm.box = "generic/ubuntu2204"
-    haproxy.vm.hostname = "haproxy.okdlab.net"
-  end
-
   config.vm.define "controlplane1" do |controlplane1|
     controlplane1.vm.box = "generic/ubuntu2204"
     controlplane1.vm.hostname = "controlplane1.okdlab.net"
   end
 
-  config.vm.define "controlplane2" do |controlplane2|
-    controlplane2.vm.box = "generic/ubuntu2204"
-    controlplane2.vm.hostname = "controlplane2.okdlab.net"
-  end
+  #config.vm.define "controlplane2" do |controlplane2|
+  #  controlplane2.vm.box = "generic/ubuntu2204"
+  #  controlplane2.vm.hostname = "controlplane2.okdlab.net"
+  #end
 
-  config.vm.define "controlplane3" do |controlplane3|
-    controlplane3.vm.box = "generic/ubuntu2204"
-    controlplane3.vm.hostname = "controlplane3.okdlab.net"
-  end
+  #config.vm.define "controlplane3" do |controlplane3|
+  #  controlplane3.vm.box = "generic/ubuntu2204"
+  #  controlplane3.vm.hostname = "controlplane3.okdlab.net"
+  #end
 
   config.vm.define "worker1" do |worker1|
     worker1.vm.box = "generic/ubuntu2204"

@@ -2,12 +2,18 @@
   systemd:
     name: systemd-resolved
     enabled: False
-    state: stopped
+    state: started
 
 - name: install golang
   apt:
       name: golang
       state: present
+
+- name: turn off systemd-resolved
+  systemd:
+    name: systemd-resolved
+    enabled: False
+    state: stopped
 
 - name: create the dns service code directory
   file:

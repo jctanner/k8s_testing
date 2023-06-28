@@ -26,7 +26,16 @@
   tasks:
       - name: setup dns service
         include_role:
-          name: jctanner.k8s_lab.dns
+          name: jctanner.k8s_lab.dns_server
+
+
+- name: set the dns server on all hosts
+  hosts: controlplane_hosts:worker_hosts
+  become: True
+  tasks:
+      - name: setup dns service
+        include_role:
+          name: jctanner.k8s_lab.dns_client
 
 
 - hosts: controlplane_hosts:worker_hosts

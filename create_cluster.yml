@@ -1,11 +1,11 @@
 - hosts: controlplane1
-  gather_facts: False
+  gather_facts: True
   become: True
 
   tasks:
 
     - name: init cluster
-      shell: kubeadm init
+      shell: "{{ 'kubeadm init --apiserver-advertise-address=' + hostvars['controlplane1']['ansible_all_ipv4_addresses'][-1] }}"
       args:
         creates: /etc/kubernetes/manifests/kube-scheduler.yaml
       register: init_output
